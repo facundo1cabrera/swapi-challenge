@@ -105,14 +105,89 @@ export class LambdaStack extends Stack {
             ]
         }));
 
+        const getStarshipLambda = new NodejsFunction(this, 'GetStarshipLambda', {
+            runtime: Runtime.NODEJS_18_X,
+            handler: 'handler',
+            entry:  join(__dirname, '..', '..', 'services', 'starships', 'getStarshipLambda.ts'),
+            environment: {
+                DYNAMO_TABLE_NAME: props.starshipsTable.tableName
+            }
+        })
+
+        getStarshipLambda.addToRolePolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            resources: [props.starshipsTable.tableArn],
+            actions: [
+                'dynamodb:GetItem'
+            ]
+        }));
+
+        const incrementStarshipLambda = new NodejsFunction(this, 'IncrementStarshipAmountLambda', {
+            runtime: Runtime.NODEJS_18_X,
+            handler: 'handler',
+            entry: join(__dirname, '..', '..', 'services', 'starships', 'incrementStarshipAmountLambda.ts'),
+            environment: {
+                DYNAMO_TABLE_NAME: props.starshipsTable.tableName
+            }
+        });
+
+        incrementStarshipLambda.addToRolePolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            resources: [props.starshipsTable.tableArn],
+            actions: [
+                'dynamodb:PutItem',
+                'dynamodb:GetItem',
+                'dynamodb:UpdateItem'
+            ]
+        }));
+
+        const decrementStarshipLambda = new NodejsFunction(this, 'DecrementStarshipAmountLambda', {
+            runtime: Runtime.NODEJS_18_X,
+            handler: 'handler',
+            entry: join(__dirname, '..', '..', 'services', 'starships', 'decrementStarshipAmountLambda.ts'),
+            environment: {
+                DYNAMO_TABLE_NAME: props.starshipsTable.tableName
+            }
+        });
+
+        decrementStarshipLambda.addToRolePolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            resources: [props.starshipsTable.tableArn],
+            actions: [
+                'dynamodb:PutItem',
+                'dynamodb:GetItem',
+                'dynamodb:UpdateItem'
+            ]
+        }));
+        
+        const setStarshipAmountLambda = new NodejsFunction(this, 'SetStarshipAmountLambda', {
+            runtime: Runtime.NODEJS_18_X,
+            handler: 'handler',
+            entry: join(__dirname, '..', '..', 'services', 'starships', 'setStarshipAmountLambda.ts'),
+            environment: {
+                DYNAMO_TABLE_NAME: props.starshipsTable.tableName
+            }
+        });
+
+        setStarshipAmountLambda.addToRolePolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            resources: [props.starshipsTable.tableArn],
+            actions: [
+                'dynamodb:PutItem',
+                'dynamodb:GetItem',
+                'dynamodb:UpdateItem'
+            ]
+        }));
+
+
         this.getVehicleLambdaIntegration = new LambdaIntegration(getVehicleLambda);
         this.incrementVehicleLambdaIntegration = new LambdaIntegration(incrementVehicleLambda);
         this.decrementVehicleLambdaIntegration = new LambdaIntegration(decrementVehicleLambda);
         this.setVehicleLambdaIntegration = new LambdaIntegration(setVehicleAmountLambda);
 
-        this.getStarshipLambdaIntegration = new LambdaIntegration(getVehicleLambda);
-        this.incrementStarshipLambdaIntegration = new LambdaIntegration(getVehicleLambda);
-        this.decrementStarshipLambdaIntegration = new LambdaIntegration(getVehicleLambda);
-        this.setStarshipLambdaIntegration = new LambdaIntegration(getVehicleLambda);
+        this.getStarshipLambdaIntegration = new LambdaIntegration(getStarshipLambda);
+        this.incrementStarshipLambdaIntegration = new LambdaIntegration(incrementStarshipLambda);
+        this.decrementStarshipLambdaIntegration = new LambdaIntegration(decrementStarshipLambda);
+        this.setStarshipLambdaIntegration = new LambdaIntegration(setStarshipAmountLambda);
     }
 }
