@@ -34,7 +34,7 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context): Pr
                 statusCode: 404,
                 body: JSON.stringify({
                     success: false,
-                    message: "The vehicle with that Id does not exist"
+                    message: error.message
                 })
             }
         }
