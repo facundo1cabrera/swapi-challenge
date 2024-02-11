@@ -86,10 +86,29 @@ export class LambdaStack extends Stack {
             ]
         }));
 
+        const setVehicleAmountLambda = new NodejsFunction(this, 'SetVehicleAmountLambda', {
+            runtime: Runtime.NODEJS_18_X,
+            handler: 'handler',
+            entry: join(__dirname, '..', '..', 'services', 'vehicles', 'setVehicleAmountLambda.ts'),
+            environment: {
+                DYNAMO_TABLE_NAME: props.vehiclesTable.tableName
+            }
+        });
+
+        setVehicleAmountLambda.addToRolePolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            resources: [props.vehiclesTable.tableArn],
+            actions: [
+                'dynamodb:PutItem',
+                'dynamodb:GetItem',
+                'dynamodb:UpdateItem'
+            ]
+        }));
+
         this.getVehicleLambdaIntegration = new LambdaIntegration(getVehicleLambda);
         this.incrementVehicleLambdaIntegration = new LambdaIntegration(incrementVehicleLambda);
         this.decrementVehicleLambdaIntegration = new LambdaIntegration(decrementVehicleLambda);
-        this.setVehicleLambdaIntegration = new LambdaIntegration(getVehicleLambda);
+        this.setVehicleLambdaIntegration = new LambdaIntegration(setVehicleAmountLambda);
 
         this.getStarshipLambdaIntegration = new LambdaIntegration(getVehicleLambda);
         this.incrementStarshipLambdaIntegration = new LambdaIntegration(getVehicleLambda);
