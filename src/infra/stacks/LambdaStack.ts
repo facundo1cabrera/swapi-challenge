@@ -88,7 +88,7 @@ export class LambdaStack extends Stack {
 
         this.getVehicleLambdaIntegration = new LambdaIntegration(getVehicleLambda);
         this.incrementVehicleLambdaIntegration = new LambdaIntegration(incrementVehicleLambda);
-        this.decrementVehicleLambdaIntegration = new LambdaIntegration(getVehicleLambda);
+        this.decrementVehicleLambdaIntegration = new LambdaIntegration(decrementVehicleLambda);
         this.setVehicleLambdaIntegration = new LambdaIntegration(getVehicleLambda);
 
         this.getStarshipLambdaIntegration = new LambdaIntegration(getVehicleLambda);
