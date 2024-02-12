@@ -181,6 +181,7 @@ npm run test
 Good news! You dont actually need to download anything to try the project!
 
 It is deployed in aws behind the https://9fn7rgv9w6.execute-api.us-east-1.amazonaws.com/prod/ url. 
+
 You can try the endpoints using the client of your preference like postman, insomnia, bash or vscode. The file [rest.http](https://github.com/facundo1cabrera/swapi-challenge/blob/main/rest.http) has some example requests to try in case you use vscode and have the 'REST client' extension.
 
 ## Assumptions:
