@@ -9,10 +9,12 @@ export const handler = async (event: APIGatewayProxyEvent, context: Context): Pr
     try {
         validateIdAsNumber(event.pathParameters['id']);
         const id = parseInt(event.pathParameters['id']);
-        const dynamoDbResult = await dbClient.getById(id);
-
         const swapiClient = new SwapiClient(process.env.SWAPI_BASE_URL);
-        const starshipData = await swapiClient.getStarship(id);
+
+        const [dynamoDbResult, starshipData] = await Promise.all([
+            dbClient.getById(id),
+            swapiClient.getStarship(id)
+        ]);
 
         return {
             statusCode: 200,
